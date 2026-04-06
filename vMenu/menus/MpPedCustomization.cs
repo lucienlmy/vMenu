@@ -1099,35 +1099,6 @@ namespace vMenuClient.menus
             inheritanceMenu.AddMenuItem(inheritanceShapeMix);
             inheritanceMenu.AddMenuItem(inheritanceSkinMix);
 
-            // formula from maintransition.#sc
-            float GetMinimum()
-            {
-                return currentCharacter.IsMale ? 0.05f : 0.3f;
-            }
-
-            float GetMaximum()
-            {
-                return currentCharacter.IsMale ? 0.7f : 0.95f;
-            }
-
-            float ClampMix(int value)
-            {
-                var sliderFraction = mixValues[value];
-                var min = GetMinimum();
-                var max = GetMaximum();
-
-                return min + (sliderFraction * (max - min));
-            }
-
-            int UnclampMix(float value)
-            {
-                var min = GetMinimum();
-                var max = GetMaximum();
-
-                var origFraction = (value - min) / (max - min);
-                return Math.Max(Math.Min((int)(origFraction * 10), 10), 0);
-            }
-
             inheritanceMenu.OnListIndexChange += (_menu, listItem, oldSelectionIndex, newSelectionIndex, itemIndex) =>
             {
                 _parentOne = inheritanceParentOne.ListIndex;
