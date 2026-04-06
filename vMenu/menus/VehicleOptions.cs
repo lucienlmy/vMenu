@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 using CitizenFX.Core;
 
-using CitizenFX.Core.Native;
 using MenuAPI;
 
 using vMenuClient.data;
@@ -1183,7 +1181,7 @@ namespace vMenuClient.menus
                     var wheelColor = 0;
                     var dashColor = 0;
                     var intColor = 0;
-                    
+
                     GetVehicleColours(veh.Handle, ref primaryColor, ref secondaryColor);
                     GetVehicleExtraColours(veh.Handle, ref pearlColor, ref wheelColor);
                     GetVehicleDashboardColour(veh.Handle, ref dashColor);
@@ -1337,7 +1335,6 @@ namespace vMenuClient.menus
                     
                     CreateCustomColourMenu(customColourMenuPrimary, RGBType.primaryPaint);
                     primaryColorsMenu.OnListIndexChange += HandleListIndexChanges;
-                    //primaryColorsMenu.OnItemSelect += HandleItemSelect;
                 }
                 else
                 {
@@ -1355,7 +1352,6 @@ namespace vMenuClient.menus
 
                     CreateCustomColourMenu(customColourMenuSecondary, RGBType.secondaryPaint);
                     secondaryColorsMenu.OnListIndexChange += HandleListIndexChanges;
-                    //secondaryColorsMenu.OnItemSelect += HandleItemSelect;
                 }
             }
 
@@ -2621,8 +2617,6 @@ namespace vMenuClient.menus
             menu.OnMenuOpen += (menu) =>
             {
                 Vehicle vehicle = GetVehicle();
-                
-                OutputArgument paintType = new OutputArgument(-1);
 
                 if (type == RGBType.primaryPaint)
                     GetVehicleCustomPrimaryColour(vehicle.Handle, ref r, ref g, ref b);
