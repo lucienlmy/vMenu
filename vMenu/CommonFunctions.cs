@@ -1445,6 +1445,14 @@ namespace vMenuClient
                 {
                     vehicle.Mods.PrimaryColor = (VehicleColor)vehicleInfo.colors["primary"];
                 }
+                if (vehicleInfo.colors.ContainsKey("PrimaryPaintFinish"))
+                {
+                    var pearlColorReset = 0;
+                    var wheelColorReset = 0;
+                    GetVehicleExtraColours(vehicle.Handle, ref pearlColorReset, ref wheelColorReset);
+                    SetVehicleModColor_1(vehicle.Handle, vehicleInfo.colors["PrimaryPaintFinish"], 0, 0);
+                    SetVehicleExtraColours(vehicle.Handle, pearlColorReset, wheelColorReset);
+                }
 
                 bool useCustomRgbSecondary = vehicleInfo.colors.ContainsKey("customSecondaryR") && vehicleInfo.colors.ContainsKey("customSecondaryG") && vehicleInfo.colors.ContainsKey("customSecondaryB");
                 if (useCustomRgbSecondary && vehicleInfo.colors["customSecondaryR"] > 0 && vehicleInfo.colors["customSecondaryG"] > 0 && vehicleInfo.colors["customSecondaryB"] > 0)
@@ -1455,7 +1463,14 @@ namespace vMenuClient
                 {
                     vehicle.Mods.SecondaryColor = (VehicleColor)vehicleInfo.colors["secondary"];
                 }
-
+                if (vehicleInfo.colors.ContainsKey("SecondaryPaintFinish"))
+                {
+                    var pearlColorReset = 0;
+                    var wheelColorReset = 0;
+                    GetVehicleExtraColours(vehicle.Handle, ref pearlColorReset, ref wheelColorReset);
+                    SetVehicleModColor_2(vehicle.Handle, vehicleInfo.colors["SecondaryPaintFinish"], 0);
+                    SetVehicleExtraColours(vehicle.Handle, pearlColorReset, wheelColorReset);
+                }
                 SetVehicleInteriorColour(vehicle.Handle, vehicleInfo.colors["trim"]);
                 SetVehicleDashboardColour(vehicle.Handle, vehicleInfo.colors["dash"]);
 
@@ -1472,6 +1487,11 @@ namespace vMenuClient
 
                 VehicleOptions.SetHeadlightsColorForVehicle(vehicle, vehicleInfo.headlightColor);
 
+                bool useCustomRgbHeadlight = vehicleInfo.colors.ContainsKey("customheadlightR") && vehicleInfo.colors.ContainsKey("customheadlightG") && vehicleInfo.colors.ContainsKey("customheadlightB");
+                if (useCustomRgbHeadlight)
+                {
+                    SetVehicleXenonLightsCustomColor(vehicle.Handle, vehicleInfo.colors["customheadlightR"], vehicleInfo.colors["customheadlightG"], vehicleInfo.colors["customheadlightB"]);
+                }
                 vehicle.Mods.NeonLightsColor = System.Drawing.Color.FromArgb(red: vehicleInfo.colors["neonR"], green: vehicleInfo.colors["neonG"], blue: vehicleInfo.colors["neonB"]);
                 vehicle.Mods.SetNeonLightsOn(VehicleNeonLight.Left, vehicleInfo.neonLeft);
                 vehicle.Mods.SetNeonLightsOn(VehicleNeonLight.Right, vehicleInfo.neonRight);
@@ -1600,7 +1620,13 @@ namespace vMenuClient
                     {
                         GetVehicleCustomPrimaryColour(veh.Handle, ref customPrimaryR, ref customPrimaryG, ref customPrimaryB);
                     }
+                    
+                    if (!string.IsNullOrWhiteSpace($"{veh.State.Get("vMenu:PrimaryPaintFinish")}"))
+                    {
+                        colors.Add("PrimaryPaintFinish",  Convert.ToInt32((object)veh.State.Get("vMenu:PrimaryPaintFinish")));
+                    }
 
+                    
                     colors.Add("customPrimaryR", customPrimaryR);
                     colors.Add("customPrimaryG", customPrimaryG);
                     colors.Add("customPrimaryB", customPrimaryB);
@@ -1616,9 +1642,24 @@ namespace vMenuClient
                         GetVehicleCustomSecondaryColour(veh.Handle, ref customSecondaryR, ref customSecondaryG, ref customSecondaryB);
                     }
 
+                    if (!string.IsNullOrWhiteSpace($"{veh.State.Get("vMenu:SecondaryPaintFinish")}"))
+                    {
+                        colors.Add("SecondaryPaintFinish", Convert.ToInt32((object)veh.State.Get("vMenu:SecondaryPaintFinish")));
+                    }
+
                     colors.Add("customSecondaryR", customSecondaryR);
                     colors.Add("customSecondaryG", customSecondaryG);
                     colors.Add("customSecondaryB", customSecondaryB);
+
+                    int customheadlightR = -1;
+                    int customheadlightG = -1;
+                    int customheadlightB = -1;
+                    if (GetVehicleXenonLightsCustomColor(veh.Handle, ref customheadlightR, ref customheadlightG, ref customheadlightB))
+                    {
+                        colors.Add("customheadlightR", customheadlightR);
+                        colors.Add("customheadlightG", customheadlightG);
+                        colors.Add("customheadlightB", customheadlightB);
+                    }
                     #endregion
 
                     var extras = new Dictionary<int, bool>();
